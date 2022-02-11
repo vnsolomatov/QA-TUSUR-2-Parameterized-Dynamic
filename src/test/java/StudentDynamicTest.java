@@ -7,6 +7,26 @@ import org.junit.jupiter.api.TestFactory;
 
 public class StudentDynamicTest {
 	
+	boolean isDoubleName(String anyName) {	//метод определяет содержит ли имя или фамилия дефис
+		char[] aNA = anyName.toCharArray();
+		boolean iDN = false;
+		for (int j=0; j < aNA.length; j++) {
+			if ('-' == aNA[j]) iDN = true;	
+		}
+		System.out.println(iDN);
+		return iDN;
+	}
+
+	char getFirstLetterSecondName(String anyName) {	//метод возвращает символ после дефиса
+		char[] aNA = anyName.toCharArray();
+		char fLSN = aNA[0];
+		for (int j=0; j < aNA.length; j++) {
+			if ('-' == aNA[j]) fLSN = aNA[j+1];	
+		}
+		System.out.println(fLSN);
+		return fLSN;
+	}
+	 
 	@TestFactory
     Stream<DynamicTest> dynamicPosiTestGetAge() {
 		List<DynamicTest> dynamicTests = new ArrayList<>();
@@ -42,20 +62,21 @@ public class StudentDynamicTest {
     }
 	
 	@TestFactory
-    Stream<DynamicTest> dynamicPosiTestGetFirstName() {
+    Stream<DynamicTest> dynamicTestGetDoubleFirstName() {
 		List<DynamicTest> dynamicTests = new ArrayList<>();
 		List<Student> k = new ArrayList<Student>();
-		k.add(new Student("Petr", "Petrov", 19));
+		k.add(new Student("Mary-Ann", "Petrov", 19));//метод класса Student запишет второе имя со строчной буквы: Mary-ann
 		k.add(new Student("Ivan", "Ivanov", 29));
 		k.add(new Student("Sidor", "Sidorov", 39));
 		k.add(new Student("Kirill", "Kirillov", 49));
 		for(int i=0; i < k.size(); i++) {
-			String fN = k.get(i).getFirstName();
-			String[] fnA = fN.split("-");
-			for (int j=0; j < fnA.length; j++) {
-				String everyFN = fnA[j];
-				dynamicTests.add(DynamicTest.dynamicTest("test"+i, () -> {assertTrue(everyFN.charAt(0) >= 'A' & everyFN.charAt(0) <= 'Z');}));
+			String fN = k.get(i).getFirstName();		
+			if (isDoubleName(fN)) {
+				dynamicTests.add(DynamicTest.dynamicTest("test"+i, () -> {assertTrue((getFirstLetterSecondName(fN) >= 'a' & getFirstLetterSecondName(fN) <= 'z')&(fN.charAt(0) >= 'A' & fN.charAt(0) <= 'Z'));}));
+				System.out.println(fN);
 			}
+			else 
+				dynamicTests.add(DynamicTest.dynamicTest("test"+i, () -> {assertTrue((fN.charAt(0) >= 'A' & fN.charAt(0) <= 'Z'));}));
 		}
 		return dynamicTests.stream();
     }
@@ -70,11 +91,7 @@ public class StudentDynamicTest {
 		k.add(new Student("KKirill", "Kirillov", 49));
 		for(int i=0; i < k.size(); i++) {
 			String fN = k.get(i).getFirstName();
-			String[] fnA = fN.split("-");
-			for (int j=0; j < fnA.length; j++) {
-				String everyFN = fnA[j];
-				dynamicTests.add(DynamicTest.dynamicTest("test"+i, () -> {assertTrue(everyFN.charAt(0) >= 'A' & everyFN.charAt(0) <= 'Z');}));
-			}
+			dynamicTests.add(DynamicTest.dynamicTest("test"+i, () -> {assertTrue(fN.charAt(0) >= 'A' & fN.charAt(0) <= 'Z');}));
 		}
 		return dynamicTests.stream();
     }
@@ -89,11 +106,7 @@ public class StudentDynamicTest {
 		k.add(new Student("Kirill", "Kirillov", 49));
 		for(int i=0; i < k.size(); i++) {
 			String lN = k.get(i).getLastName();
-			String[] lnA = lN.split("-");
-			for (int j=0; j < lnA.length; j++) {
-				String everyLN = lnA[j];
-				dynamicTests.add(DynamicTest.dynamicTest("test"+i, () -> {assertTrue(everyLN.charAt(0) >= 'A' & everyLN.charAt(0) <= 'Z');}));
-			}
+			dynamicTests.add(DynamicTest.dynamicTest("test"+i, () -> {assertTrue(lN.charAt(0) >= 'A' & lN.charAt(0) <= 'Z');}));
 		}
 		return dynamicTests.stream();
     }
@@ -108,11 +121,7 @@ public class StudentDynamicTest {
 		k.add(new Student("Kirill", "Kirilлov", 49));
 		for(int i=0; i < k.size(); i++) {
 			String lN = k.get(i).getLastName();
-			String[] lnA = lN.split("-");
-			for (int j=0; j < lnA.length; j++) {
-				String everyLN = lnA[j];
-				dynamicTests.add(DynamicTest.dynamicTest("test"+i, () -> {assertTrue(everyLN.charAt(0) >= 'A' & everyLN.charAt(0) <= 'Z');}));
-			}
+			dynamicTests.add(DynamicTest.dynamicTest("test"+i, () -> {assertTrue(lN.charAt(0) >= 'A' & lN.charAt(0) <= 'Z');}));
 		}
 		return dynamicTests.stream();
     }
